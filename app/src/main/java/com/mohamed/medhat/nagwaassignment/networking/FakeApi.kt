@@ -1,6 +1,7 @@
 package com.mohamed.medhat.nagwaassignment.networking
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import kotlinx.coroutines.delay
 import retrofit2.Response
@@ -27,7 +28,7 @@ class FakeApi @Inject constructor() : NetworkApi {
             "  {\n" +
             "    \"id\": 3,\n" +
             "    \"type\": \"PDF\",\n" +
-            "    \"url\": \"(https://kotlinlang.org/docs/kotlin-reference.pdf\",\n" +
+            "    \"url\": \"https://kotlinlang.org/docs/kotlin-reference.pdf\",\n" +
             "    \"name\": \"PDF 3\"\n" +
             "  },\n" +
             "  {\n" +
@@ -88,7 +89,8 @@ class FakeApi @Inject constructor() : NetworkApi {
 
     override suspend fun getLearningData(): Response<List<DataItem>> {
         delay(2000)
-        val list: List<DataItem> = Gson().fromJson(jsonResponse, List::class.java) as List<DataItem>
+        val dataItemsListType = object : TypeToken<List<DataItem>>() {}.type
+        val list: List<DataItem> = Gson().fromJson(jsonResponse, dataItemsListType)
         return Response.success(200, list)
     }
 }
