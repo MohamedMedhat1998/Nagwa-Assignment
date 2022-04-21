@@ -11,6 +11,7 @@ import com.mohamed.medhat.nagwaassignment.R
 import com.mohamed.medhat.nagwaassignment.databinding.ItemDataItemBinding
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.Constants
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
 import javax.inject.Inject
 
 /**
@@ -32,14 +33,73 @@ class ItemsAdapter @Inject constructor() :
     inner class DataItemHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ItemDataItemBinding.bind(itemView);
 
+        init {
+            binding.ibDataItemAction.setOnClickListener {
+                when (currentList[adapterPosition].state.state) {
+                    DownloadState.STATE_DOWNLOADED -> {
+                        when (currentList[adapterPosition].type) {
+                            Constants.TYPE_VIDEO -> {
+                                // TODO open the video in ExoPlayer.
+                            }
+                            Constants.TYPE_PDF -> {
+                                // TODO preview the PDF.
+                            }
+                        }
+                    }
+                    DownloadState.STATE_DOWNLOADING -> {
+                        // TODO cancel download
+                    }
+                    DownloadState.STATE_NOT_DOWNLOADED -> {
+                        // TODO start download
+                    }
+                }
+            }
+
+            binding.ibDataItemDelete.setOnClickListener {
+                // TODO delete the media
+            }
+        }
+
         /**
          * Binds a single [DataItem] to the ui.
          */
         fun bind(dataItem: DataItem) {
-            // TODO handle the action button state and action.
             // TODO find a way to keep track with the state of the file (downloading, not downloaded, downloaded).
-            // TODO handle the visibility of the download progress bar.
             binding.tvDataItemName.text = dataItem.name
+            when (dataItem.state.state) {
+                DownloadState.STATE_DOWNLOADED -> {
+                    binding.pbDataItemDownloadProgress.visibility = View.GONE
+                    binding.tvDataItemDownloadPercentage.visibility = View.GONE
+                    binding.ibDataItemDelete.visibility = View.VISIBLE
+                    when (dataItem.type) {
+                        Constants.TYPE_VIDEO -> {
+                            Glide.with(binding.root.context)
+                                .load(R.drawable.ic_play)
+                                .into(binding.ibDataItemAction)
+                        }
+                        Constants.TYPE_PDF -> {
+                            Glide.with(binding.root.context)
+                                .load(R.drawable.ic_read)
+                                .into(binding.ibDataItemAction)
+                        }
+                    }
+                }
+                DownloadState.STATE_DOWNLOADING -> {
+                    binding.pbDataItemDownloadProgress.visibility = View.VISIBLE
+                    binding.tvDataItemDownloadPercentage.visibility = View.VISIBLE
+                    binding.ibDataItemDelete.visibility = View.GONE
+                    binding.pbDataItemDownloadProgress.progress = dataItem.state.progress
+                    binding.tvDataItemDownloadPercentage.text = binding.root.context.getString(
+                        R.string.download_percentage,
+                        dataItem.state.progress
+                    )
+                }
+                DownloadState.STATE_NOT_DOWNLOADED -> {
+                    binding.pbDataItemDownloadProgress.visibility = View.GONE
+                    binding.tvDataItemDownloadPercentage.visibility = View.GONE
+                    binding.ibDataItemDelete.visibility = View.GONE
+                }
+            }
             when (dataItem.type) {
                 Constants.TYPE_VIDEO -> {
                     Glide.with(binding.root.context)

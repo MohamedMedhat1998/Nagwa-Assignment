@@ -3,6 +3,8 @@ package com.mohamed.medhat.nagwaassignment.domain
 import com.mohamed.medhat.nagwaassignment.di.FakeRepo
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.repository.Repository
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,6 +24,10 @@ class LoadData @Inject constructor(@FakeRepo val repository: Repository) :
         withContext(Dispatchers.IO) {
             try {
                 val data = repository.getData()
+                // TODO update the dataItem.state
+                data.forEach {
+                    it.state = DownloadStateHolder(DownloadState.STATE_NOT_DOWNLOADED)
+                }
                 onSuccess.invoke(DataResponseValues(data))
             } catch (e: Exception) {
                 e.printStackTrace()
