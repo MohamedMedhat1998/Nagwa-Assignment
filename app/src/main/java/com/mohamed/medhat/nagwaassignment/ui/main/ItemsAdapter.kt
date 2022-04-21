@@ -93,11 +93,17 @@ class ItemsAdapter @Inject constructor() :
                         R.string.download_percentage,
                         dataItem.state.progress
                     )
+                    Glide.with(binding.root.context)
+                        .load(R.drawable.ic_cancel)
+                        .into(binding.ibDataItemAction)
                 }
                 DownloadState.STATE_NOT_DOWNLOADED -> {
                     binding.pbDataItemDownloadProgress.visibility = View.GONE
                     binding.tvDataItemDownloadPercentage.visibility = View.GONE
                     binding.ibDataItemDelete.visibility = View.GONE
+                    Glide.with(binding.root.context)
+                        .load(R.drawable.ic_download)
+                        .into(binding.ibDataItemAction)
                 }
             }
             when (dataItem.type) {
