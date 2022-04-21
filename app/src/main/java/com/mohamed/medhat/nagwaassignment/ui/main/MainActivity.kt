@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mohamed.medhat.nagwaassignment.databinding.ActivityMainBinding
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Represents the home screen of the application. It contains the list of the available learning resources.
@@ -16,6 +18,9 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var adapter: ItemsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +34,8 @@ class MainActivity : AppCompatActivity() {
      * Initializes the UI.
      */
     private fun initViews() {
-
+        binding.rvMainData.layoutManager = LinearLayoutManager(this)
+        binding.rvMainData.adapter = adapter
     }
 
     /**
@@ -55,6 +61,10 @@ class MainActivity : AppCompatActivity() {
                     binding.tvMainError.text = it.error
                 }
             }
+        }
+
+        mainViewModel.data.observe(this) {
+            adapter.submitList(it)
         }
     }
 }
