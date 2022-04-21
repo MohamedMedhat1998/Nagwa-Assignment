@@ -1,7 +1,9 @@
-package com.mohamed.medhat.nagwaassignment
+package com.mohamed.medhat.nagwaassignment.ui.main
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.mohamed.medhat.nagwaassignment.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -9,8 +11,13 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val mainViewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }
