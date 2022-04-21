@@ -1,6 +1,9 @@
 package com.mohamed.medhat.nagwaassignment.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -9,4 +12,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
+    // TODO find a way to update the state
+    private val _state = MutableLiveData<ActivityStateHolder>()
+    val state: LiveData<ActivityStateHolder>
+        get() = _state
 }
