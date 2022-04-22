@@ -2,6 +2,7 @@ package com.mohamed.medhat.nagwaassignment.ui.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,6 +47,9 @@ class MainActivity : AppCompatActivity() {
         adapter.onCancelDownloadClicked = {
             mainViewModel.cancelDownload(it)
         }
+        adapter.onDeleteMediaClicked = {
+            mainViewModel.deleteMedia(it)
+        }
     }
 
     /**
@@ -79,6 +83,10 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.newItemState.observe(this) {
             adapter.updateItemState(it)
+        }
+
+        mainViewModel.toastMessage.observe(this) {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
     }
 }

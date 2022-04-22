@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mohamed.medhat.nagwaassignment.domain.UseCase
 import com.mohamed.medhat.nagwaassignment.domain.UseCaseHandler
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.CancelDownload
+import com.mohamed.medhat.nagwaassignment.domain.use_cases.DeleteMedia
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.DownloadMedia
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData
 import com.mohamed.medhat.nagwaassignment.model.DataItem
@@ -26,6 +27,7 @@ class MainViewModel @Inject constructor(
     private val loadData: LoadData,
     private val downloadMedia: DownloadMedia,
     private val cancelDownload: CancelDownload,
+    private val deleteMedia: DeleteMedia,
     private val useCaseHandler: UseCaseHandler,
     private val observable: DataItemNagwaObservable
 ) : ViewModel(), NagwaObserver<DataItem> {
@@ -41,6 +43,10 @@ class MainViewModel @Inject constructor(
     private val _newItemState = MutableLiveData<DataItem>()
     val newItemState: LiveData<DataItem>
         get() = _newItemState
+
+    private val _toastMessage = MutableLiveData<String>()
+    val toastMessage: LiveData<String>
+        get() = _toastMessage
 
     init {
         observable.registerObserver(this)
@@ -81,6 +87,22 @@ class MainViewModel @Inject constructor(
             useCaseHandler.execute(
                 cancelDownload,
                 CancelDownload.CancelDownloadRequestValues(dataItem)
+            )
+        }
+    }
+
+    /**
+     * Deletes the media of the passed [dataItem].
+     * @param dataItem The [DataItem] whose media should be deleted.
+     */
+    fun deleteMedia(dataItem: DataItem) {
+        viewModelScope.launch {
+            useCaseHandler.execute(
+                deleteMedia,
+                DeleteMedia.DeleteMediaRequestValues(dataItem),
+                onError = {
+                    _toastMessage.postValue(it)
+                }
             )
         }
     }
