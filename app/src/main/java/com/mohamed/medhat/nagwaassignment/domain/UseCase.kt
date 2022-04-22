@@ -3,11 +3,12 @@ package com.mohamed.medhat.nagwaassignment.domain
 /**
  * Represents an action that can occur inside the app.
  */
-abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValues> {
+abstract class UseCase<Q : UseCase.RequestValues, R : UseCase.ResponseValues, P : UseCase.ProgressValues> {
 
     var requestValues: Q? = null
-    var onSuccess: (P) -> Unit = {}
+    var onSuccess: (R) -> Unit = {}
     var onError: (String) -> Unit = {}
+    var onProgress: (P) -> Unit = {}
 
     /**
      * Enables the [UseCaseHandler] to execute the use case.
@@ -27,6 +28,11 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValues> {
     interface RequestValues
 
     /**
+     * Updates coming from the use case.
+     */
+    interface ProgressValues
+
+    /**
      * Data received from a use case.
      */
     interface ResponseValues
@@ -34,10 +40,15 @@ abstract class UseCase<Q : UseCase.RequestValues, P : UseCase.ResponseValues> {
     /**
      * Used by use cases that don't require request values.
      */
-    class NoRequestValues() : RequestValues
+    class NoRequestValues : RequestValues
 
     /**
      * Used by use cases that don't have response values.
      */
-    class NoResponseValues() : ResponseValues
+    class NoResponseValues : ResponseValues
+
+    /**
+     * Used by use cases that don't have progress values.
+     */
+    class NoProgressValues : ProgressValues
 }

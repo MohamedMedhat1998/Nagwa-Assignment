@@ -1,6 +1,8 @@
 package com.mohamed.medhat.nagwaassignment.model
 
 import com.google.gson.annotations.SerializedName
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 
 /**
  * A POJO for the json data item coming from the server response.
@@ -17,5 +19,7 @@ data class DataItem(
     val type: String,
 
     @field:SerializedName("url")
-    val url: String
+    val url: String,
+
+    var state: DownloadStateHolder = DownloadStateHolder(DownloadState.STATE_NOT_DOWNLOADED)
 )
