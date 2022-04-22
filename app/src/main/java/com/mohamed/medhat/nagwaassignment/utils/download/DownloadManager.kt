@@ -3,6 +3,7 @@ package com.mohamed.medhat.nagwaassignment.utils.download
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
@@ -47,6 +48,10 @@ class DownloadManager @Inject constructor(@ApplicationContext private val contex
             val fileLength: Int = connection.contentLength
 
             input = connection.inputStream
+            val file = File("${context.filesDir}/$fileName")
+            if (file.exists()) {
+                file.delete()
+            }
             output = FileOutputStream("${context.filesDir}/$fileName")
             val data = ByteArray(4096)
             var total: Long = 0

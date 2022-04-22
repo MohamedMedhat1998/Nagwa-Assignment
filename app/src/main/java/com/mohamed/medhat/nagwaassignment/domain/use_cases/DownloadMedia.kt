@@ -36,7 +36,6 @@ class DownloadMedia @Inject constructor(private val workManager: WorkManager) :
         ProgressValues
 
     override suspend fun executeUseCase(requestValues: DownloadMediaRequestValues?) {
-        // TODO update the state
         if (requestValues == null) {
             Log.e(TAG, "executeUseCase: requestValues can't be null!")
             return
