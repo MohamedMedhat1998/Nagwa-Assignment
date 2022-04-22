@@ -3,7 +3,6 @@ package com.mohamed.medhat.nagwaassignment.domain.use_cases
 import com.mohamed.medhat.nagwaassignment.di.FakeRepo
 import com.mohamed.medhat.nagwaassignment.di.PrefsStateKeeper
 import com.mohamed.medhat.nagwaassignment.domain.UseCase
-import com.mohamed.medhat.nagwaassignment.domain.UseCase.NoProgressValues
 import com.mohamed.medhat.nagwaassignment.domain.UseCase.NoRequestValues
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData.DataResponseValues
 import com.mohamed.medhat.nagwaassignment.model.DataItem
@@ -21,7 +20,7 @@ class LoadData @Inject constructor(
     @FakeRepo private val repository: Repository,
     @PrefsStateKeeper private val stateKeeper: DataItemStateKeeper
 ) :
-    UseCase<NoRequestValues, DataResponseValues, NoProgressValues>() {
+    UseCase<NoRequestValues, DataResponseValues>() {
 
     /**
      * Holds a list of [DataItem]s as a response value for this use case.

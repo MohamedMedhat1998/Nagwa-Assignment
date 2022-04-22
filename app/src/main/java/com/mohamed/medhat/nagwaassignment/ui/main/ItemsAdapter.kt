@@ -125,14 +125,13 @@ class ItemsAdapter @Inject constructor() :
     }
 
     /**
-     * Updates the state of the passed [dataItem] to the new passed [state].
+     * Updates the state of the passed [dataItem] with the new state it has.
      * @param dataItem The [DataItem] that has a state updates.
-     * @param state The new state of the [DataItem].
      */
-    fun updateItemState(dataItem: DataItem, state: DownloadStateHolder) {
+    fun updateItemState(dataItem: DataItem) {
         currentList.forEachIndexed { index, it ->
             if (it.id == dataItem.id) {
-                it.state = state
+                it.state = dataItem.state
                 notifyItemChanged(index)
             }
         }
