@@ -10,9 +10,10 @@ import com.mohamed.medhat.nagwaassignment.domain.use_cases.CancelDownload
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.DownloadMedia
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData
 import com.mohamed.medhat.nagwaassignment.model.DataItem
+import com.mohamed.medhat.nagwaassignment.observables.DataItemNagwaObservable
+import com.mohamed.medhat.nagwaassignment.observables.NagwaObserver
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState.*
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityStateHolder
-import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,8 +26,9 @@ class MainViewModel @Inject constructor(
     private val loadData: LoadData,
     private val downloadMedia: DownloadMedia,
     private val cancelDownload: CancelDownload,
-    private val useCaseHandler: UseCaseHandler
-) : ViewModel() {
+    private val useCaseHandler: UseCaseHandler,
+    private val observable: DataItemNagwaObservable
+) : ViewModel(), NagwaObserver<DataItem> {
 
     private val _state = MutableLiveData<ActivityStateHolder>()
     val state: LiveData<ActivityStateHolder>
@@ -36,11 +38,12 @@ class MainViewModel @Inject constructor(
     val data: LiveData<List<DataItem>>
         get() = _data
 
-    private val _itemState = MutableLiveData<Pair<DataItem, DownloadStateHolder>>()
-    val itemState: LiveData<Pair<DataItem, DownloadStateHolder>>
-        get() = _itemState
+    private val _newItemState = MutableLiveData<DataItem>()
+    val newItemState: LiveData<DataItem>
+        get() = _newItemState
 
     init {
+        observable.registerObserver(this)
         _state.postValue(ActivityStateHolder(STATE_LOADING))
         viewModelScope.launch {
             useCaseHandler.execute(
@@ -64,10 +67,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             useCaseHandler.execute(
                 downloadMedia,
-                DownloadMedia.DownloadMediaRequestValues(dataItem),
-                onProgress = {
-                    _itemState.postValue(it.dataItem to it.progress)
-                })
+                DownloadMedia.DownloadMediaRequestValues(dataItem)
+            )
         }
     }
 
@@ -82,5 +83,14 @@ class MainViewModel @Inject constructor(
                 CancelDownload.CancelDownloadRequestValues(dataItem)
             )
         }
+    }
+
+    override fun onUpdate(d: DataItem) {
+        _newItemState.postValue(d)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        observable.removeObserver(this)
     }
 }

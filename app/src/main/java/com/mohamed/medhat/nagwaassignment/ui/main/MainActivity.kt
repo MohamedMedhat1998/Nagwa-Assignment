@@ -77,8 +77,8 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
 
-        mainViewModel.itemState.observe(this) {
-            adapter.updateItemState(it.first, it.second)
+        mainViewModel.newItemState.observe(this) {
+            adapter.updateItemState(it)
         }
     }
 }
