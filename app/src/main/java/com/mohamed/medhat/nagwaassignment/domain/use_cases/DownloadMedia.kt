@@ -36,7 +36,6 @@ class DownloadMedia @Inject constructor(private val workManager: WorkManager) :
         ProgressValues
 
     override suspend fun executeUseCase(requestValues: DownloadMediaRequestValues?) {
-        // TODO update the state
         if (requestValues == null) {
             Log.e(TAG, "executeUseCase: requestValues can't be null!")
             return
@@ -64,10 +63,7 @@ class DownloadMedia @Inject constructor(private val workManager: WorkManager) :
                     onProgress.invoke(
                         DownloadMediaProgressValues(
                             requestValues.dataItem,
-                            DownloadStateHolder(
-                                STATE_DOWNLOADING,
-                                progress
-                            )
+                            DownloadStateHolder(STATE_DOWNLOADING, progress)
                         )
                     )
                     val state = t.state
@@ -75,9 +71,7 @@ class DownloadMedia @Inject constructor(private val workManager: WorkManager) :
                         onProgress.invoke(
                             DownloadMediaProgressValues(
                                 requestValues.dataItem,
-                                DownloadStateHolder(
-                                    STATE_DOWNLOADED
-                                )
+                                DownloadStateHolder(STATE_DOWNLOADED)
                             )
                         )
                         Log.d(TAG, "onChanged: Observer removed!")
@@ -86,9 +80,7 @@ class DownloadMedia @Inject constructor(private val workManager: WorkManager) :
                         onProgress.invoke(
                             DownloadMediaProgressValues(
                                 requestValues.dataItem,
-                                DownloadStateHolder(
-                                    STATE_NOT_DOWNLOADED
-                                )
+                                DownloadStateHolder(STATE_NOT_DOWNLOADED)
                             )
                         )
                         Log.d(TAG, "onChanged: Observer removed!")
