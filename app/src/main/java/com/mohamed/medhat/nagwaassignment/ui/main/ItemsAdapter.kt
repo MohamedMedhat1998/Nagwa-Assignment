@@ -20,6 +20,8 @@ import javax.inject.Inject
 class ItemsAdapter @Inject constructor() :
     ListAdapter<DataItem, ItemsAdapter.DataItemHolder>(DataItemDiffUtilCallback) {
 
+    var onDownloadClicked: (DataItem) -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_data_item, parent, false)
@@ -50,7 +52,7 @@ class ItemsAdapter @Inject constructor() :
                         // TODO cancel download
                     }
                     DownloadState.STATE_NOT_DOWNLOADED -> {
-                        // TODO start download
+                        onDownloadClicked.invoke(currentList[adapterPosition])
                     }
                 }
             }

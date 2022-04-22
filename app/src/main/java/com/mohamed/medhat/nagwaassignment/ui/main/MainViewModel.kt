@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mohamed.medhat.nagwaassignment.domain.LoadData
 import com.mohamed.medhat.nagwaassignment.domain.UseCase
 import com.mohamed.medhat.nagwaassignment.domain.UseCaseHandler
+import com.mohamed.medhat.nagwaassignment.domain.use_cases.DownloadMedia
+import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState.*
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityStateHolder
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val loadData: LoadData,
+    private val downloadMedia: DownloadMedia,
     private val useCaseHandler: UseCaseHandler
 ) : ViewModel() {
 
@@ -43,6 +45,24 @@ class MainViewModel @Inject constructor(
                 },
                 onError = {
                     _state.postValue(ActivityStateHolder(STATE_ERROR, it))
+                })
+        }
+    }
+
+    /**
+     * Downloads the passed data item's media file.
+     * @param dataItem The data to download.
+     */
+    fun downloadData(dataItem: DataItem) {
+        viewModelScope.launch {
+            useCaseHandler.execute(
+                downloadMedia,
+                DownloadMedia.DownloadMediaRequestValues(dataItem),
+                onSuccess = {
+                    // TODO
+                },
+                onError = {
+                    // TODO
                 })
         }
     }

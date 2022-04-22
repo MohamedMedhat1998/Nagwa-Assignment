@@ -1,6 +1,7 @@
-package com.mohamed.medhat.nagwaassignment.domain
+package com.mohamed.medhat.nagwaassignment.domain.use_cases
 
 import com.mohamed.medhat.nagwaassignment.di.FakeRepo
+import com.mohamed.medhat.nagwaassignment.domain.UseCase
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.repository.Repository
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState

@@ -36,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         binding.rvMainData.layoutManager = LinearLayoutManager(this)
         binding.rvMainData.adapter = adapter
+        adapter.onDownloadClicked = {
+            mainViewModel.downloadData(it)
+        }
     }
 
     /**
