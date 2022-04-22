@@ -86,7 +86,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             useCaseHandler.execute(
                 cancelDownload,
-                CancelDownload.CancelDownloadRequestValues(dataItem)
+                CancelDownload.CancelDownloadRequestValues(dataItem),
+                onSuccess = {
+                    deleteMedia(dataItem)
+                }
             )
         }
     }

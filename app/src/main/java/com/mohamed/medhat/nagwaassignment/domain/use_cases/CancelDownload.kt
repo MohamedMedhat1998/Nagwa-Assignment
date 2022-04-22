@@ -46,13 +46,6 @@ class CancelDownload @Inject constructor(
                 )
             )
         )
-        val file = File(
-            "${context.filesDir}/${requestValues.dataItem.id}.${
-                requestValues.dataItem.url.takeLast(3)
-            }"
-        )
-        if (file.exists()) {
-            file.delete()
-        }
+        onSuccess.invoke(NoResponseValues())
     }
 }
