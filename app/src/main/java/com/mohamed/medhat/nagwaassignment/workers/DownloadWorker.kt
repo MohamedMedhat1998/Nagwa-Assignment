@@ -19,8 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 const val INPUT_DATA_DATA_ITEM = "input-data-item"
-const val PROGRESS_DATA_PROGRESS = "progress-progress"
-const val PROGRESS_DATA_STATE = "progress-state"
 private const val TAG = "DownloadWorker"
 
 /**

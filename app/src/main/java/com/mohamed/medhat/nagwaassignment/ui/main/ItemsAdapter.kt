@@ -12,7 +12,6 @@ import com.mohamed.medhat.nagwaassignment.databinding.ItemDataItemBinding
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.Constants
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
-import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import javax.inject.Inject
 
 /**
@@ -23,6 +22,7 @@ class ItemsAdapter @Inject constructor() :
 
     var onDownloadClicked: (DataItem) -> Unit = {}
     var onCancelDownloadClicked: (DataItem) -> Unit = {}
+    var onDeleteMediaClicked: (DataItem) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val view =
@@ -60,7 +60,7 @@ class ItemsAdapter @Inject constructor() :
             }
 
             binding.ibDataItemDelete.setOnClickListener {
-                // TODO delete the media
+                onDeleteMediaClicked.invoke(currentList[adapterPosition])
             }
         }
 
