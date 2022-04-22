@@ -3,11 +3,13 @@ package com.mohamed.medhat.nagwaassignment.domain.use_cases
 import android.content.Context
 import android.util.Log
 import com.mohamed.medhat.nagwaassignment.R
+import com.mohamed.medhat.nagwaassignment.di.PrefsStateKeeper
 import com.mohamed.medhat.nagwaassignment.domain.UseCase
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.observables.DataItemNagwaObservable
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState.STATE_NOT_DOWNLOADED
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
+import com.mohamed.medhat.nagwaassignment.utils.state.DataItemStateKeeper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -19,7 +21,8 @@ private const val TAG = "DeleteMedia"
  */
 class DeleteMedia @Inject constructor(
     @ApplicationContext private val context: Context,
-    val observable: DataItemNagwaObservable
+    @PrefsStateKeeper private val stateKeeper: DataItemStateKeeper,
+    private val observable: DataItemNagwaObservable
 ) : UseCase<DeleteMedia.DeleteMediaRequestValues, UseCase.NoResponseValues>() {
     /**
      * Holds the [DataItem] whose media will be deleted using this use case.
@@ -45,7 +48,15 @@ class DeleteMedia @Inject constructor(
             } else {
                 onError.invoke(context.getString(R.string.delete_error_message))
             }
+        } else {
+            observable.notifyChanges(
+                dataItem.copy(
+                    state = DownloadStateHolder(
+                        STATE_NOT_DOWNLOADED
+                    )
+                )
+            )
         }
+        stateKeeper.updateDataItemState(requestValues.dataItem, STATE_NOT_DOWNLOADED)
     }
-
 }
