@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import com.google.gson.Gson
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.download.DownloadManager
@@ -14,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 const val INPUT_DATA_DATA_ITEM = "input-data-item"
+const val PROGRESS_DATA_PROGRESS = "progress-progress"
+const val PROGRESS_DATA_STATE = "progress-state"
 private const val TAG = "DownloadWorker"
 
 /**
@@ -36,7 +39,7 @@ class DownloadWorker @AssistedInject constructor(
                 val isSuccessful =
                     downloadManager.download(dataItem.url, "${dataItem.id}.$extension") {
                         Log.d(TAG, "doWork: progress: ${it}%")
-                        // TODO publish this progress outside the work manager.
+                        setProgress(workDataOf(PROGRESS_DATA_PROGRESS to it))
                         // TODO create a notification with the progress.
                     }
                 if (isSuccessful) {

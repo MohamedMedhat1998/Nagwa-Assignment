@@ -12,6 +12,7 @@ import com.mohamed.medhat.nagwaassignment.databinding.ItemDataItemBinding
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.Constants
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import javax.inject.Inject
 
 /**
@@ -124,6 +125,20 @@ class ItemsAdapter @Inject constructor() :
     }
 
     /**
+     * Updates the state of the passed [dataItem] to the new passed [state].
+     * @param dataItem The [DataItem] that has a state updates.
+     * @param state The new state of the [DataItem].
+     */
+    fun updateItemState(dataItem: DataItem, state: DownloadStateHolder) {
+        currentList.forEachIndexed { index, it ->
+            if (it.id == dataItem.id) {
+                it.state = state
+                notifyItemChanged(index)
+            }
+        }
+    }
+
+    /**
      * Defines whether two [DataItem]s are the same or not and whether the content is the same or not.
      */
     object DataItemDiffUtilCallback : DiffUtil.ItemCallback<DataItem>() {
@@ -134,6 +149,5 @@ class ItemsAdapter @Inject constructor() :
         override fun areContentsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
             return oldItem.name == newItem.name && oldItem.type == newItem.type
         }
-
     }
 }

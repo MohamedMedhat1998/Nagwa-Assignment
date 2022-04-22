@@ -11,6 +11,7 @@ import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState.*
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityStateHolder
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +33,10 @@ class MainViewModel @Inject constructor(
     private val _data = MutableLiveData<List<DataItem>>()
     val data: LiveData<List<DataItem>>
         get() = _data
+
+    private val _itemState = MutableLiveData<Pair<DataItem, DownloadStateHolder>>()
+    val itemState: LiveData<Pair<DataItem, DownloadStateHolder>>
+        get() = _itemState
 
     init {
         _state.postValue(ActivityStateHolder(STATE_LOADING))
@@ -58,11 +63,8 @@ class MainViewModel @Inject constructor(
             useCaseHandler.execute(
                 downloadMedia,
                 DownloadMedia.DownloadMediaRequestValues(dataItem),
-                onSuccess = {
-                    // TODO
-                },
-                onError = {
-                    // TODO
+                onProgress = {
+                    _itemState.postValue(it.dataItem to it.progress)
                 })
         }
     }

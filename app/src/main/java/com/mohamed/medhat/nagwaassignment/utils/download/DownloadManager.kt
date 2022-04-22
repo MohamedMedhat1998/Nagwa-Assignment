@@ -26,7 +26,8 @@ class DownloadManager @Inject constructor(@ApplicationContext private val contex
      * @param onProgress The lambda that gets invoked when the download makes some progress.
      * @return `true` if the download was successful, `false` otherwise.
      */
-    fun download(link: String, fileName: String, onProgress: (Int) -> Unit): Boolean {
+    @Suppress("BlockingMethodInNonBlockingContext")
+    suspend fun download(link: String, fileName: String, onProgress: suspend (Int) -> Unit): Boolean {
         val input: InputStream?
         val output: OutputStream?
         val connection: HttpURLConnection?

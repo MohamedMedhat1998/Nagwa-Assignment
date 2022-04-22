@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.mohamed.medhat.nagwaassignment.databinding.ActivityMainBinding
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,8 +35,11 @@ class MainActivity : AppCompatActivity() {
      * Initializes the UI.
      */
     private fun initViews() {
-        binding.rvMainData.layoutManager = LinearLayoutManager(this)
-        binding.rvMainData.adapter = adapter
+        binding.rvMainData.apply {
+            layoutManager = LinearLayoutManager(baseContext)
+            adapter = this@MainActivity.adapter
+            (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+        }
         adapter.onDownloadClicked = {
             mainViewModel.downloadData(it)
         }
@@ -68,6 +72,10 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.data.observe(this) {
             adapter.submitList(it)
+        }
+
+        mainViewModel.itemState.observe(this) {
+            adapter.updateItemState(it.first, it.second)
         }
     }
 }
