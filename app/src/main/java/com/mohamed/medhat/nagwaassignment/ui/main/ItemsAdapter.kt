@@ -22,6 +22,7 @@ class ItemsAdapter @Inject constructor() :
     ListAdapter<DataItem, ItemsAdapter.DataItemHolder>(DataItemDiffUtilCallback) {
 
     var onDownloadClicked: (DataItem) -> Unit = {}
+    var onCancelDownloadClicked: (DataItem) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val view =
@@ -50,7 +51,7 @@ class ItemsAdapter @Inject constructor() :
                         }
                     }
                     DownloadState.STATE_DOWNLOADING -> {
-                        // TODO cancel download
+                        onCancelDownloadClicked.invoke(currentList[adapterPosition])
                     }
                     DownloadState.STATE_NOT_DOWNLOADED -> {
                         onDownloadClicked.invoke(currentList[adapterPosition])
@@ -67,7 +68,6 @@ class ItemsAdapter @Inject constructor() :
          * Binds a single [DataItem] to the ui.
          */
         fun bind(dataItem: DataItem) {
-            // TODO find a way to keep track with the state of the file (downloading, not downloaded, downloaded).
             binding.tvDataItemName.text = dataItem.name
             when (dataItem.state.state) {
                 DownloadState.STATE_DOWNLOADED -> {

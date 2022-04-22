@@ -43,6 +43,9 @@ class MainActivity : AppCompatActivity() {
         adapter.onDownloadClicked = {
             mainViewModel.downloadData(it)
         }
+        adapter.onCancelDownloadClicked = {
+            mainViewModel.cancelDownload(it)
+        }
     }
 
     /**

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamed.medhat.nagwaassignment.domain.UseCase
 import com.mohamed.medhat.nagwaassignment.domain.UseCaseHandler
+import com.mohamed.medhat.nagwaassignment.domain.use_cases.CancelDownload
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.DownloadMedia
 import com.mohamed.medhat.nagwaassignment.domain.use_cases.LoadData
 import com.mohamed.medhat.nagwaassignment.model.DataItem
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val loadData: LoadData,
     private val downloadMedia: DownloadMedia,
+    private val cancelDownload: CancelDownload,
     private val useCaseHandler: UseCaseHandler
 ) : ViewModel() {
 
@@ -66,6 +68,19 @@ class MainViewModel @Inject constructor(
                 onProgress = {
                     _itemState.postValue(it.dataItem to it.progress)
                 })
+        }
+    }
+
+    /**
+     * Cancels the ongoing download of the passed [dataItem].
+     * @param dataItem The [DataItem] whose download will be cancelled.
+     */
+    fun cancelDownload(dataItem: DataItem) {
+        viewModelScope.launch {
+            useCaseHandler.execute(
+                cancelDownload,
+                CancelDownload.CancelDownloadRequestValues(dataItem)
+            )
         }
     }
 }
