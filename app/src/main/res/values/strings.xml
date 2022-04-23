@@ -4,4 +4,7 @@
     <string name="delete_error_message">Something went wrong during deletion!</string>
     <string name="downloading">Downloading</string>
     <string name="download_completed">Download Completed</string>
+    <string name="media_type_indicator">Media type indicator</string>
+    <string name="action_button">Action Button</string>
+    <string name="delete_button">Delete Button</string>
 </resources>

@@ -35,7 +35,7 @@ class ItemsAdapter @Inject constructor() :
     }
 
     inner class DataItemHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = ItemDataItemBinding.bind(itemView);
+        private val binding = ItemDataItemBinding.bind(itemView)
 
         init {
             binding.ibDataItemAction.setOnClickListener {
