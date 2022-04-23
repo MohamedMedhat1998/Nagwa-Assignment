@@ -35,7 +35,7 @@ class DeleteMedia @Inject constructor(
             return
         }
         val dataItem = requestValues.dataItem
-        val file = File("${context.filesDir}/${dataItem.id}.${dataItem.url.takeLast(3)}")
+        val file = File("${context.filesDir}/${dataItem.getFileName()}")
         if (file.exists()) {
             if (file.delete()) {
                 observable.notifyChanges(

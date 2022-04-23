@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.mohamed.medhat.nagwaassignment.R
 import com.mohamed.medhat.nagwaassignment.databinding.ItemDataItemBinding
 import com.mohamed.medhat.nagwaassignment.model.DataItem
-import com.mohamed.medhat.nagwaassignment.utils.Constants
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState
 import javax.inject.Inject
 
@@ -23,6 +22,7 @@ class ItemsAdapter @Inject constructor() :
     var onDownloadClicked: (DataItem) -> Unit = {}
     var onCancelDownloadClicked: (DataItem) -> Unit = {}
     var onDeleteMediaClicked: (DataItem) -> Unit = {}
+    var onDisplayClicked: (DataItem) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val view =
@@ -41,14 +41,7 @@ class ItemsAdapter @Inject constructor() :
             binding.ibDataItemAction.setOnClickListener {
                 when (currentList[adapterPosition].state.state) {
                     DownloadState.STATE_DOWNLOADED -> {
-                        when (currentList[adapterPosition].type) {
-                            Constants.TYPE_VIDEO -> {
-                                // TODO open the video in ExoPlayer.
-                            }
-                            Constants.TYPE_PDF -> {
-                                // TODO preview the PDF.
-                            }
-                        }
+                        onDisplayClicked.invoke(currentList[adapterPosition])
                     }
                     DownloadState.STATE_DOWNLOADING -> {
                         onCancelDownloadClicked.invoke(currentList[adapterPosition])
@@ -69,27 +62,27 @@ class ItemsAdapter @Inject constructor() :
          */
         fun bind(dataItem: DataItem) {
             binding.tvDataItemName.text = dataItem.name
+            Glide.with(binding.root.context)
+                .load(dataItem.getMediaLogo())
+                .into(binding.ivDataItemIcon)
+
             when (dataItem.state.state) {
                 DownloadState.STATE_DOWNLOADED -> {
                     binding.pbDataItemDownloadProgress.visibility = View.GONE
                     binding.tvDataItemDownloadPercentage.visibility = View.GONE
                     binding.ibDataItemDelete.visibility = View.VISIBLE
-                    when (dataItem.type) {
-                        Constants.TYPE_VIDEO -> {
-                            Glide.with(binding.root.context)
-                                .load(R.drawable.ic_play)
-                                .into(binding.ibDataItemAction)
-                        }
-                        Constants.TYPE_PDF -> {
-                            Glide.with(binding.root.context)
-                                .load(R.drawable.ic_read)
-                                .into(binding.ibDataItemAction)
-                        }
-                    }
+                    Glide.with(binding.root.context)
+                        .load(dataItem.getActionButtonIcon())
+                        .into(binding.ibDataItemAction)
+
                 }
                 DownloadState.STATE_DOWNLOADING -> {
                     binding.pbDataItemDownloadProgress.visibility = View.VISIBLE
                     binding.ibDataItemDelete.visibility = View.GONE
+                    Glide.with(binding.root.context)
+                        .load(R.drawable.ic_cancel)
+                        .into(binding.ibDataItemAction)
+
                     if (dataItem.state.progress == -1) {
                         binding.tvDataItemDownloadPercentage.visibility = View.GONE
                         binding.pbDataItemDownloadProgress.isIndeterminate = true
@@ -102,9 +95,6 @@ class ItemsAdapter @Inject constructor() :
                             dataItem.state.progress
                         )
                     }
-                    Glide.with(binding.root.context)
-                        .load(R.drawable.ic_cancel)
-                        .into(binding.ibDataItemAction)
                 }
                 DownloadState.STATE_NOT_DOWNLOADED -> {
                     binding.pbDataItemDownloadProgress.visibility = View.GONE
@@ -113,18 +103,6 @@ class ItemsAdapter @Inject constructor() :
                     Glide.with(binding.root.context)
                         .load(R.drawable.ic_download)
                         .into(binding.ibDataItemAction)
-                }
-            }
-            when (dataItem.type) {
-                Constants.TYPE_VIDEO -> {
-                    Glide.with(binding.root.context)
-                        .load(R.drawable.ic_video)
-                        .into(binding.ivDataItemIcon)
-                }
-                Constants.TYPE_PDF -> {
-                    Glide.with(binding.root.context)
-                        .load(R.drawable.ic_pdf)
-                        .into(binding.ivDataItemIcon)
                 }
             }
         }

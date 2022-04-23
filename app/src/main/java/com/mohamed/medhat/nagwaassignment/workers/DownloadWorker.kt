@@ -37,11 +37,10 @@ class DownloadWorker @AssistedInject constructor(
         val dataItemJson = inputData.getString(INPUT_DATA_DATA_ITEM) ?: return Result.failure()
         val dataItem =
             Gson().fromJson(dataItemJson, DataItem::class.java) ?: return Result.failure()
-        val extension = dataItem.url.takeLast(3)
         return withContext(Dispatchers.IO) {
             try {
                 val isSuccessful =
-                    downloadManager.download(dataItem.url, "${dataItem.id}.$extension") {
+                    downloadManager.download(dataItem.url, dataItem.getFileName()) {
                         Log.d(TAG, "doWork: progress: ${it}%")
                         if (!isStopped) {
                             observable.notifyChanges(
