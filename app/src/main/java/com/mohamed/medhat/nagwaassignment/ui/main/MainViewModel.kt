@@ -15,6 +15,8 @@ import com.mohamed.medhat.nagwaassignment.observables.DataItemNagwaObservable
 import com.mohamed.medhat.nagwaassignment.observables.NagwaObserver
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState.*
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityStateHolder
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState.STATE_DOWNLOADING
+import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,6 +72,7 @@ class MainViewModel @Inject constructor(
      * @param dataItem The data to download.
      */
     fun downloadData(dataItem: DataItem) {
+        _newItemState.postValue(dataItem.copy(state = DownloadStateHolder(STATE_DOWNLOADING, -1)))
         viewModelScope.launch {
             useCaseHandler.execute(
                 downloadMedia,
