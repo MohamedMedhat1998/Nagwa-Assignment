@@ -23,6 +23,7 @@ class ItemsAdapter @Inject constructor() :
     var onDownloadClicked: (DataItem) -> Unit = {}
     var onCancelDownloadClicked: (DataItem) -> Unit = {}
     var onDeleteMediaClicked: (DataItem) -> Unit = {}
+    var onPlayVideoClicked: (DataItem) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val view =
@@ -43,7 +44,7 @@ class ItemsAdapter @Inject constructor() :
                     DownloadState.STATE_DOWNLOADED -> {
                         when (currentList[adapterPosition].type) {
                             Constants.TYPE_VIDEO -> {
-                                // TODO open the video in ExoPlayer.
+                                onPlayVideoClicked.invoke(currentList[adapterPosition])
                             }
                             Constants.TYPE_PDF -> {
                                 // TODO preview the PDF.

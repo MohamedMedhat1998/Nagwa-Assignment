@@ -1,16 +1,21 @@
 package com.mohamed.medhat.nagwaassignment.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.mohamed.medhat.nagwaassignment.BuildConfig
 import com.mohamed.medhat.nagwaassignment.databinding.ActivityMainBinding
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import javax.inject.Inject
+
 
 /**
  * Represents the home screen of the application. It contains the list of the available learning resources.
@@ -49,6 +54,18 @@ class MainActivity : AppCompatActivity() {
         }
         adapter.onDeleteMediaClicked = {
             mainViewModel.deleteMedia(it)
+        }
+        adapter.onPlayVideoClicked = {
+            val videoFile = File("$filesDir/${it.id}.${it.url.takeLast(3)}")
+            val fileUri = FileProvider.getUriForFile(
+                this,
+                "${BuildConfig.APPLICATION_ID}.provider",
+                videoFile
+            )
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(fileUri, "video/*")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(intent)
         }
     }
 
