@@ -2,4 +2,6 @@
     <string name="app_name">Mohamed Medhat Nagwa Assignment</string>
     <string name="download_percentage">%d%%</string>
     <string name="delete_error_message">Something went wrong during deletion!</string>
+    <string name="downloading">Downloading</string>
+    <string name="download_completed">Download Completed</string>
 </resources>

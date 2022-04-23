@@ -1,5 +1,6 @@
 package com.mohamed.medhat.nagwaassignment.di
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -53,6 +54,11 @@ object Providers {
     @Provides
     fun provideSharedPrefs(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceManager.getDefaultSharedPreferences(context)
+    }
+
+    @Provides
+    fun provideNotificationManager(@ApplicationContext context: Context): NotificationManager {
+        return context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 }
 

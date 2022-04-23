@@ -1,11 +1,14 @@
 package com.mohamed.medhat.nagwaassignment.workers
 
+import android.app.NotificationManager
 import android.content.Context
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
+import com.mohamed.medhat.nagwaassignment.R
 import com.mohamed.medhat.nagwaassignment.di.PrefsStateKeeper
 import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.observables.DataItemNagwaObservable
@@ -26,11 +29,12 @@ private const val TAG = "DownloadWorker"
  */
 @HiltWorker
 class DownloadWorker @AssistedInject constructor(
-    @Assisted appContext: Context,
+    @Assisted private val appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val downloadManager: DownloadManager,
     @PrefsStateKeeper private val stateKeeper: DataItemStateKeeper,
-    private val observable: DataItemNagwaObservable
+    private val observable: DataItemNagwaObservable,
+    private val notificationManager: NotificationManager
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -50,6 +54,19 @@ class DownloadWorker @AssistedInject constructor(
                                     )
                                 )
                             )
+                            if (it % 10 == 0 || it == -1) {
+                                val notification =
+                                    NotificationCompat.Builder(appContext, "DOWNLOADS")
+                                        .setSmallIcon(R.drawable.ic_notification_downloading)
+                                        .setContentTitle(dataItem.name)
+                                        .setContentText(appContext.getString(R.string.downloading))
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setAutoCancel(true)
+                                        .setProgress(100, it, it == -1)
+                                        .build()
+                                notificationManager.notify(dataItem.id, notification)
+                            }
+
                         } else {
                             downloadManager.isCancelled = true
                             observable.notifyChanges(
@@ -59,8 +76,8 @@ class DownloadWorker @AssistedInject constructor(
                                     )
                                 )
                             )
+                            notificationManager.cancel(dataItem.id)
                         }
-                        // TODO create a notification with the progress.
                     }
                 if (isSuccessful) {
                     stateKeeper.updateDataItemState(dataItem, STATE_DOWNLOADED)
@@ -71,6 +88,16 @@ class DownloadWorker @AssistedInject constructor(
                             )
                         )
                     )
+                    val notification = NotificationCompat.Builder(appContext, "DOWNLOADS")
+                        .setSmallIcon(R.drawable.ic_notification_download_completed)
+                        .setContentTitle(dataItem.name)
+                        .setContentText(appContext.getString(R.string.download_completed))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setAutoCancel(true)
+                        .setProgress(0, 0, false)
+                        .build()
+
+                    notificationManager.notify(dataItem.id, notification)
                     Result.success()
                 } else {
                     stateKeeper.updateDataItemState(dataItem, STATE_NOT_DOWNLOADED)
@@ -81,6 +108,7 @@ class DownloadWorker @AssistedInject constructor(
                             )
                         )
                     )
+                    notificationManager.cancel(dataItem.id)
                     Result.failure()
                 }
             } catch (e: Exception) {
@@ -93,6 +121,7 @@ class DownloadWorker @AssistedInject constructor(
                         )
                     )
                 )
+                notificationManager.cancel(dataItem.id)
                 Result.failure()
             }
         }
