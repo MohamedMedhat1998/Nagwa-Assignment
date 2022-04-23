@@ -15,7 +15,7 @@ interface DataItemStateKeeper {
     fun updateDataItemState(dataItem: DataItem, @DownloadState state: Int)
 
     /**
-     * @return The previously saved state of the passeed [dataItem].
+     * @return The previously saved state of the passed [dataItem].
      */
     @DownloadState
     fun getDataItemState(dataItem: DataItem): Int

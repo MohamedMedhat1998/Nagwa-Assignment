@@ -1,6 +1,5 @@
 package com.mohamed.medhat.nagwaassignment.domain.use_cases
 
-import android.content.Context
 import android.util.Log
 import androidx.work.WorkManager
 import com.mohamed.medhat.nagwaassignment.di.PrefsStateKeeper
@@ -10,8 +9,6 @@ import com.mohamed.medhat.nagwaassignment.observables.DataItemNagwaObservable
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadState.STATE_NOT_DOWNLOADED
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.DownloadStateHolder
 import com.mohamed.medhat.nagwaassignment.utils.state.DataItemStateKeeper
-import dagger.hilt.android.qualifiers.ApplicationContext
-import java.io.File
 import javax.inject.Inject
 
 private const val TAG = "CancelDownload"
@@ -20,7 +17,6 @@ private const val TAG = "CancelDownload"
  * Cancels the ongoing download of a specific [DataItem].
  */
 class CancelDownload @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val workManager: WorkManager,
     @PrefsStateKeeper private val stateKeeper: DataItemStateKeeper,
     private val observable: DataItemNagwaObservable
