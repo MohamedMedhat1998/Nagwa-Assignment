@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.SOURCE)
 @IntDef({STATE_NORMAL, STATE_LOADING, STATE_ERROR})
 public @interface ActivityState {
-    public static int STATE_NORMAL = 0;
-    public static int STATE_LOADING = 1;
-    public static int STATE_ERROR = 2;
+    int STATE_NORMAL = 0;
+    int STATE_LOADING = 1;
+    int STATE_ERROR = 2;
 }

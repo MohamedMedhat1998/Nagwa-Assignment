@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.mohamed.medhat.nagwaassignment.BuildConfig
 import com.mohamed.medhat.nagwaassignment.databinding.ActivityMainBinding
+import com.mohamed.medhat.nagwaassignment.model.DataItem
 import com.mohamed.medhat.nagwaassignment.utils.int_defs.ActivityState
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -55,17 +56,8 @@ class MainActivity : AppCompatActivity() {
         adapter.onDeleteMediaClicked = {
             mainViewModel.deleteMedia(it)
         }
-        adapter.onPlayVideoClicked = {
-            val videoFile = File("$filesDir/${it.id}.${it.url.takeLast(3)}")
-            val fileUri = FileProvider.getUriForFile(
-                this,
-                "${BuildConfig.APPLICATION_ID}.provider",
-                videoFile
-            )
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(fileUri, "video/*")
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            startActivity(intent)
+        adapter.onDisplayClicked = {
+            displayMedia(it)
         }
     }
 
@@ -105,5 +97,22 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.toastMessage.observe(this) {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /**
+     * Displays the downloaded media file of the [dataItem].
+     * @param dataItem The [DataItem] whose media will be displayed.
+     */
+    private fun displayMedia(dataItem: DataItem) {
+        val mediaFile = File("$filesDir/${dataItem.getFileName()}")
+        val fileUri = FileProvider.getUriForFile(
+            this,
+            "${BuildConfig.APPLICATION_ID}.provider",
+            mediaFile
+        )
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(fileUri, dataItem.getMediaType())
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        startActivity(intent)
     }
 }

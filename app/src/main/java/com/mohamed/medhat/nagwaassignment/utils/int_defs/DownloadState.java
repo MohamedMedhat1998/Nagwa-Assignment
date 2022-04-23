@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 @IntDef({STATE_NOT_DOWNLOADED, STATE_DOWNLOADING, STATE_DOWNLOADED})
 @Retention(RetentionPolicy.SOURCE)
 public @interface DownloadState {
-    public static final int STATE_NOT_DOWNLOADED = 0;
-    public static final int STATE_DOWNLOADING = 1;
-    public static final int STATE_DOWNLOADED = 2;
+    int STATE_NOT_DOWNLOADED = 0;
+    int STATE_DOWNLOADING = 1;
+    int STATE_DOWNLOADED = 2;
 }
