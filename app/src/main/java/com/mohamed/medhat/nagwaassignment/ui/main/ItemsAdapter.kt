@@ -89,13 +89,19 @@ class ItemsAdapter @Inject constructor() :
                 }
                 DownloadState.STATE_DOWNLOADING -> {
                     binding.pbDataItemDownloadProgress.visibility = View.VISIBLE
-                    binding.tvDataItemDownloadPercentage.visibility = View.VISIBLE
                     binding.ibDataItemDelete.visibility = View.GONE
-                    binding.pbDataItemDownloadProgress.progress = dataItem.state.progress
-                    binding.tvDataItemDownloadPercentage.text = binding.root.context.getString(
-                        R.string.download_percentage,
-                        dataItem.state.progress
-                    )
+                    if (dataItem.state.progress == -1) {
+                        binding.tvDataItemDownloadPercentage.visibility = View.GONE
+                        binding.pbDataItemDownloadProgress.isIndeterminate = true
+                    } else {
+                        binding.tvDataItemDownloadPercentage.visibility = View.VISIBLE
+                        binding.pbDataItemDownloadProgress.isIndeterminate = false
+                        binding.pbDataItemDownloadProgress.progress = dataItem.state.progress
+                        binding.tvDataItemDownloadPercentage.text = binding.root.context.getString(
+                            R.string.download_percentage,
+                            dataItem.state.progress
+                        )
+                    }
                     Glide.with(binding.root.context)
                         .load(R.drawable.ic_cancel)
                         .into(binding.ibDataItemAction)

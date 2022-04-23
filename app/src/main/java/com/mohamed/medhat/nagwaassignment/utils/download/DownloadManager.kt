@@ -63,11 +63,17 @@ class DownloadManager @Inject constructor(@ApplicationContext private val contex
                     input.close()
                 }
                 total += count.toLong()
-                progress = (total * 100 / fileLength).toInt()
                 if (fileLength > 0) {
+                    progress = (total * 100 / fileLength).toInt()
                     if (progress > previousProgress) {
                         onProgress.invoke(progress)
                         previousProgress = progress
+                    }
+                } else {
+                    progress = -1
+                    if (progress < previousProgress) {
+                        previousProgress = progress
+                        onProgress.invoke(progress)
                     }
                 }
                 output.write(data, 0, count)
